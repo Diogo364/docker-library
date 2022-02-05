@@ -5,6 +5,6 @@ services:
     image: general-tensorlfow:latest
     user: "$UID:$GID"
     volumes:
-      - .:/workspace
+      - ..:/workspace
       - $DATASET:/dataset
     command: /bin/bash -c "while sleep 1000; do :; done"
