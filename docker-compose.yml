@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  facedetector:
+    image: general-tensorlfow:latest
+    user: "$UID:$GID"
+    volumes:
+      - .:/workspace
+      - $DATASET:/dataset
+    command: /bin/bash -c "while sleep 1000; do :; done"
