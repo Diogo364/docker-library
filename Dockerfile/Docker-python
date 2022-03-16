@@ -35,6 +35,13 @@ RUN apt-get install -y \
 RUN mkdir /workspace
 WORKDIR /workspace
 
+USER ${USERNAME}
+
+ENV SHELL=/bin/bash
+ENV PATH="$PATH:/home/${USERNAME}/.local/bin"
+
+RUN pip install --upgrade pip
+
 # Python dependencies
 RUN pip --no-cache-dir install \
         numpy \
@@ -46,12 +53,18 @@ RUN pip --no-cache-dir install \
         matplotlib \
         seaborn \
         pandas \
+        scikit-learn \
         tqdm \
-        plotly \
+        pymysql \
+        click \
+        mlflow \
+        python-decouple \
+        pyspark \
+        requests \
         geopandas \
-        fiona \
-        networkx
-
-ENV SHELL=/bin/bash
+        wordcloud \
+        networkx \
+        plotly \
+        nbformat
 
 CMD [ "/bin/bash" ]

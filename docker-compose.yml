@@ -1,10 +1,48 @@
+# -*- coding: utf-8 -*-
+# @Author: Diogo Telheiro do Nascimento
+# @Date:   2022-03-15 20:18:55
+# @Last Modified by:   Diogo Telheiro do Nascimento
+# @Last Modified time: 2022-03-16 21:20:25
 version: '3.4'
 
 services:
   facedetector:
+    build:
+      context: ./Dockerfile
+      dockerfile: ${DOCKERFILE}
+      args:
+        USERNAME: ${UNAME}
+        USER_UID: ${UID}
+        USER_GID: ${GID}
     image: ${IMAGE_NAME}:latest
-    user: "$UID:$GID"
+    
+    user: "${UID}:${GID}"
+    ports:
+      - "5000:5000"
     volumes:
       - ..:/workspace
-      - $DATASET:/dataset
+      
+      - type: bind
+        source: ${DATASET}
+        target: /dataset
+        volume: 
+          nocopy: true
+        read_only: true
+      
+      - type: bind
+        source: ${GITCONFIG}
+        target: /home/${UNAME}/.gitconfig
+        volume: 
+          nocopy: true
+        read_only: true
+      
+      - type: bind
+        source: ${SSH}
+        target: /home/${UNAME}/.ssh
+        volume: 
+          nocopy: true
+        read_only: true
+        
+    working_dir: ${WORKDIR}
+    
     command: /bin/bash -c "while sleep 1000; do :; done"
