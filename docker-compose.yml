@@ -2,7 +2,7 @@
 # @Author: Diogo Telheiro do Nascimento
 # @Date:   2022-03-15 20:18:55
 # @Last Modified by:   Diogo Telheiro do Nascimento
-# @Last Modified time: 2022-03-16 21:20:25
+# @Last Modified time: 2022-03-20 14:29:18
 version: '3.4'
 
 services:
@@ -12,8 +12,8 @@ services:
       dockerfile: ${DOCKERFILE}
       args:
         USERNAME: ${UNAME}
-        USER_UID: ${UID}
-        USER_GID: ${GID}
+        USER_UID: ${USER_UID}
+        USER_GID: ${USER_GID}
     image: ${IMAGE_NAME}:latest
     
     user: "${UID}:${GID}"
