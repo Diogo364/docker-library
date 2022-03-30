@@ -1,9 +1,8 @@
-FROM tensorflow/tensorflow:latest-gpu-jupyter
+FROM continuumio/miniconda3:4.10.3p1
 
-ARG USERNAME=tf-docker
+ARG USERNAME=conda-docker
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-
 
 RUN apt-get update && apt-get upgrade -y
 
@@ -35,11 +34,17 @@ RUN apt-get install -y \
 RUN mkdir /workspace
 WORKDIR /workspace
 
-COPY ./resources/requirements.txt /tmp/requirements.txt
-
-# Python dependencies
-RUN pip --no-cache-dir install -r /tmp/requirements.txt
+USER ${USERNAME}
 
 ENV SHELL=/bin/bash
+ENV PATH="$PATH:/home/${USERNAME}/.local/bin"
+ENV CONDA_ENVS_PATH="/home/${USERNAME}/conda/envs"
+ENV CONDA_PKGS_DIRS="/home/${USERNAME}/conda/pkgs"
+
+COPY resources/conda.yml /tmp/conda.yml
+
+RUN conda env create -f /tmp/conda.yml
+ENV PATH="${CONDA_ENVS_PATH}/general-conda/bin:$PATH"
+RUN echo "source activate general-conda" > ~/.bashrc
 
 CMD [ "/bin/bash" ]

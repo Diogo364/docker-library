@@ -42,29 +42,9 @@ ENV PATH="$PATH:/home/${USERNAME}/.local/bin"
 
 RUN pip install --upgrade pip
 
+COPY ./resources/requirements.txt /tmp/requirements.txt
+
 # Python dependencies
-RUN pip --no-cache-dir install \
-        numpy \
-        hdf5storage \
-        h5py \
-        scipy \
-        py3nvml \
-        opencv-python \
-        matplotlib \
-        seaborn \
-        pandas \
-        scikit-learn \
-        tqdm \
-        pymysql \
-        click \
-        mlflow \
-        python-decouple \
-        pyspark \
-        requests \
-        geopandas \
-        wordcloud \
-        networkx \
-        plotly \
-        nbformat
+RUN pip --no-cache-dir install -r /tmp/requirements.txt
 
 CMD [ "/bin/bash" ]
