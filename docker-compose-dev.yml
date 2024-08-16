@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+# @Author: Diogo Telheiro do Nascimento
+# @Date:   2022-03-15 20:18:55
+# @Last Modified by:   Diogo Telheiro do Nascimento
+# @Last Modified time: 2022-03-20 14:29:18
+services:
+  some-service-dev:
+    build:
+      context: ./Dockerfile
+      dockerfile: ${DOCKERFILE_DEV}
+      args:
+        USERNAME: ${UNAME}
+        USER_UID: ${USER_UID}
+        USER_GID: ${USER_GID}
+    network_mode: host
+    volumes:
+      - ${HOME}/.config/nvim:/home/${UNAME}/.config/nvim:cached
+      - ./:${WORKDIR}
+    command: nvim --listen 0.0.0.0:8008 --headless
