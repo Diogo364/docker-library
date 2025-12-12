@@ -1,0 +1,47 @@
+FROM ubuntu:24.04
+
+ARG USERNAME=ubuntu
+ARG ARCH=arm64
+
+RUN mkdir -p /etc/sudoers.d \
+    && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
+    && chmod 0440 /etc/sudoers.d/${USERNAME}
+
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y \
+    sudo \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    unzip \
+    yasm \
+    pkg-config \
+    curl
+
+
+# Install Mise
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ENV MISE_INSTALL_PATH="/usr/local/bin/mise"
+RUN curl https://mise.run | sh
+
+# Install Neovim
+RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.tar.gz \
+    && rm -rf /opt/nvim-linux-${ARCH} \
+    && tar -C /opt -xzf nvim-linux-${ARCH}.tar.gz
+
+USER ${USERNAME}
+
+ENV HOME=/home/${USERNAME}
+ENV PATH="${PATH}:${HOME}/.local/bin:/opt/nvim-linux-${ARCH}/bin"
+ENV SHELL=/bin/bash
+ENV WORKDIR=${HOME}/workspace
+
+RUN mkdir -p ${WORKDIR}
+WORKDIR ${WORKDIR}
+
+# COPY ./Dockerfile/resources/mise/mise.toml ${HOME}/.config/mise/config.toml
+RUN echo 'eval "$(mise activate bash)"' >> ${HOME}/.bashrc \
+    && echo 'eval "$(mise activate zsh)"' >> ${HOME}/.zshrc
+
+CMD [ "/bin/bash" ]
